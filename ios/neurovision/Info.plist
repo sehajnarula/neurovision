@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>neurovision</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<false/>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+  <!--
+  ====================================================
+  LOCATION PERMISSIONS
+  Used for verifying user presence during KYC,
+  inspection, and on-site activities.
+  ====================================================
+  -->
+  <!-- Location access while app is in use -->
+  <key>NSLocationWhenInUseUsageDescription</key>
+  <string>
+  $(PRODUCT_NAME) uses your location while the app is active to verify on-site inspections and service requests.
+  </string>
+  <!-- Location access even when app is in background (if required) -->
+  <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+  <string>
+  $(PRODUCT_NAME) uses your location to ensure accurate verification during KYC and inspection processes, even when the app is running in the background.
+  </string>
+
+  <!--
+  ====================================================
+  CAMERA PERMISSION
+  Used to capture images for KYC, verification,
+  and inspection records.
+  ====================================================
+  -->
+  <key>NSCameraUsageDescription</key>
+  <string>
+  $(PRODUCT_NAME) requires camera access to capture photos for identity verification and inspection records.
+  </string>
+  <!--
+  ====================================================
+  PHOTO LIBRARY PERMISSION
+  Used to select and upload existing images
+  for documents and verification.
+  ====================================================
+  -->
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>
+  $(PRODUCT_NAME) needs access to your photo library to select and upload documents or verification images.
+  </string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string/>
+	<key>RCTNewArchEnabled</key>
+	<true/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>arm64</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<true/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Roboto-Bold.ttf</string>
+		<string>Roboto-Light.ttf</string>
+		<string>Roboto-Medium.ttf</string>
+		<string>Roboto-Regular.ttf</string>
+		<string>Roboto-Thin.ttf</string>
+		<string>MaterialDesignIcons.ttf</string>
+	</array>
+</dict>
+</plist>
