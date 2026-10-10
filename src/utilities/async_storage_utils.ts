@@ -1,56 +1,58 @@
-// Async Storage Utils for maintaining any operation and functions related to it.
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// MMKV Storage Utils for maintaining any operation and functions related to it.
+
+import { createMMKV } from 'react-native-mmkv';
+
+const storage = createMMKV();
 
 /**
- * function SaveDataToAsyncStorage: it will store any value that is provided, with key mentioned into Async Storage.
- * @param {string} key : key defines key that is used for storing data, keys are mentioned in Constants under SK.
- * @param {Any} value : value can be anything as we have not mentioned any specific type here.
- * @returns : does not return anything.
+ * function SaveDataToAsyncStorage: it will store any value that is provided,
+ * with the mentioned key into MMKV Storage.
+ *
+ * @param {string} key : key defines the key used for storing data.
+ * @param {string} value : value to be stored.
  */
-export const SaveDataToAsyncStorage = async (key: string, value: string) => {
+export const SaveDataToAsyncStorage = (key: string, value: string) => {
   try {
-    await AsyncStorage.setItem(key, value);
+    storage.set(key, value);
   } catch (error) {
-    // error in saving data to async storage.
+    console.error('Error saving data to MMKV:', error);
   }
 };
 
 /**
- * function DeleteDataFromAsyncStorage: it will delete the value associated with the provided key from Async Storage.
- * @param {string} key : key defines the identifier for the data to be removed, keys are mentioned in Constants under SK.
- * does not return anything.
+ * function DeleteDataFromAsyncStorage: it will delete the value associated
+ * with the provided key from MMKV Storage.
  */
-export const DeleteDataFromAsyncStorage = async (key: string) => {
+export const DeleteDataFromAsyncStorage = (key: string) => {
   try {
-    await AsyncStorage.removeItem(key);
+    storage.remove(key);
   } catch (error) {
-    // error in deleting data from async storage.
+    console.error('Error deleting data from MMKV:', error);
   }
 };
 
 /**
- * function ReadDataFromAsyncStorage: it will retrieve the value associated with the provided key from Async Storage.
- * @param {String} key : key defines the identifier for the data to be retrieved, keys are mentioned in Constants under SK.
- * @returns {String | null} : returns the stored value if found, or null if the key does not exist or an error occurs.
+ * function ReadDataFromAsyncStorage: it will retrieve the value associated
+ * with the provided key from MMKV Storage.
+ *
+ * @returns {string | undefined}
  */
-export const ReadDataFromAsyncStorage = async (key: string) => {
-  let value: string | null = null;
+export const ReadDataFromAsyncStorage = (key: string) => {
   try {
-    value = await AsyncStorage.getItem(key);
+    return storage.getString(key);
   } catch (error) {
-    // error in getting data from async storage.
+    console.error('Error reading data from MMKV:', error);
+    return undefined;
   }
-  return value;
 };
 
 /**
- * function ClearDataFromAsyncStorage: it will clear all data from Async Storage, removing all key-value pairs.
- * @returns : does not return anything.
+ * function ClearDataFromAsyncStorage: it will clear all data from MMKV Storage.
  */
-export const ClearDataFromAsyncStorage = async () => {
+export const ClearDataFromAsyncStorage = () => {
   try {
-    await AsyncStorage.clear();
+    storage.clearAll();
   } catch (error) {
-    // error in deleting data from async storage.
+    console.error('Error clearing MMKV storage:', error);
   }
 };

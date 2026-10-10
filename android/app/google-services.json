@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "667284216154",
+    "project_id": "neurovision-b947e",
+    "storage_bucket": "neurovision-b947e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:667284216154:android:384f977db55b2d63f6bb63",
+        "android_client_info": {
+          "package_name": "com.neurovision"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "667284216154-8nb0je7lsigcgebglti577vc7sjof3in.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.neurovision",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "667284216154-r1k8ui7egl4vesr82ren2ice1d6avngq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8p3yrOohvx0WeEC-6CYzyvdT9bXq5eVs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "667284216154-r1k8ui7egl4vesr82ren2ice1d6avngq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
