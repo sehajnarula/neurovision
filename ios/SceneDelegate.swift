@@ -1,9 +1,4 @@
-//
-//  SceneDelegate.swift
-//  neurovision
-//
-//  Created by Sehaj Narula on 21/10/26.
-//
+//  Created to make compatible with iOS 27 version
 
 import UIKit
 import React
