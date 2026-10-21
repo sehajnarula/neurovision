@@ -20,7 +20,8 @@ export const useSignUp = () => {
     const signUp = async (
         name: string,
         email: string,
-        password: string
+        password: string,
+        phoneNumber: string
     ) => {
         setLoading(true);
         setError(null);
@@ -51,6 +52,7 @@ export const useSignUp = () => {
                 name,
                 email,
                 createdAt: serverTimestamp(),
+                phoneNumber
             });
 
             // 5. Create application user object
@@ -58,6 +60,7 @@ export const useSignUp = () => {
                 id: firebaseUser.uid,
                 name,
                 email,
+                phoneNumber
             };
 
             // 6. Update local state
