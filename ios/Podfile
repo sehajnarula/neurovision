@@ -48,5 +48,18 @@ target 'neurovision' do
       config[:reactNativePath],
       :mac_catalyst_enabled => false
     )
+
+  # Fix outdated iOS deployment targets in CocoaPods dependencies
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |build_config|
+        current_target =
+          build_config.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
+
+        if current_target && current_target.to_f < 15.1
+          build_config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.1'
+        end
+      end
+    end
+
   end
 end

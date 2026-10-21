@@ -33,50 +33,48 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-  <!--
-  ====================================================
-  LOCATION PERMISSIONS
-  Used for verifying user presence during KYC,
-  inspection, and on-site activities.
-  ====================================================
-  -->
-  <!-- Location access while app is in use -->
-  <key>NSLocationWhenInUseUsageDescription</key>
-  <string>
-  $(PRODUCT_NAME) uses your location while the app is active to verify on-site inspections and service requests.
-  </string>
-  <!-- Location access even when app is in background (if required) -->
-  <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-  <string>
-  $(PRODUCT_NAME) uses your location to ensure accurate verification during KYC and inspection processes, even when the app is running in the background.
-  </string>
-
-  <!--
-  ====================================================
-  CAMERA PERMISSION
-  Used to capture images for KYC, verification,
-  and inspection records.
-  ====================================================
-  -->
-  <key>NSCameraUsageDescription</key>
-  <string>
+	<key>NSCameraUsageDescription</key>
+	<string>
   $(PRODUCT_NAME) requires camera access to capture photos for identity verification and inspection records.
   </string>
-  <!--
-  ====================================================
-  PHOTO LIBRARY PERMISSION
-  Used to select and upload existing images
-  for documents and verification.
-  ====================================================
-  -->
-  <key>NSPhotoLibraryUsageDescription</key>
-  <string>
-  $(PRODUCT_NAME) needs access to your photo library to select and upload documents or verification images.
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>
+  $(PRODUCT_NAME) uses your location to ensure accurate verification during KYC and inspection processes, even when the app is running in the background.
   </string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>
+  $(PRODUCT_NAME) needs access to your photo library to select and upload documents or verification images.
+  </string>
 	<key>RCTNewArchEnabled</key>
 	<true/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Roboto-Bold.ttf</string>
+		<string>Roboto-Light.ttf</string>
+		<string>Roboto-Medium.ttf</string>
+		<string>Roboto-Regular.ttf</string>
+		<string>Roboto-Thin.ttf</string>
+		<string>MaterialDesignIcons.ttf</string>
+	</array>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneConfigurationName</key>
+					<string>Default Configuration</string>
+					<key>UISceneDelegateClassName</key>
+					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -91,14 +89,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Roboto-Bold.ttf</string>
-		<string>Roboto-Light.ttf</string>
-		<string>Roboto-Medium.ttf</string>
-		<string>Roboto-Regular.ttf</string>
-		<string>Roboto-Thin.ttf</string>
-		<string>MaterialDesignIcons.ttf</string>
-	</array>
 </dict>
 </plist>

@@ -16,21 +16,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
   ) -> Bool {
     FirebaseApp.configure()
+
     let delegate = ReactNativeDelegate()
-    let factory = RCTReactNativeFactory(delegate: delegate)
     delegate.dependencyProvider = RCTAppDependencyProvider()
 
     reactNativeDelegate = delegate
-    reactNativeFactory = factory
+    reactNativeFactory = RCTReactNativeFactory(delegate: delegate)
 
-    window = UIWindow(frame: UIScreen.main.bounds)
-
-    factory.startReactNative(
-      withModuleName: "neurovision",
-      in: window,
-      launchOptions: launchOptions
-    )
-
+    // React Native will start when UIKit connects the scene.
     return true
   }
 }
