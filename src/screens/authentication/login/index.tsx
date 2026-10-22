@@ -10,10 +10,10 @@ import { Keyboard, Pressable } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { TextInput, useTheme } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
-import { TValidateLoginDetailResponse } from 'types/api_response_data_models';
 import { AuthenticationStackParamList } from 'types/navigation_types';
 import { ms, vs } from 'utilities/scale_utils';
 import { loginUser } from 'utilities/utils';
+import { useSignIn } from '../../../hooks/firebaseSignIn';
 
 type LoginScreenProps = NativeStackScreenProps<
   AuthenticationStackParamList,
@@ -27,39 +27,48 @@ type TFormData = {
 
 const LoginScreen: React.FC<LoginScreenProps> = props => {
   const theme = useTheme();
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
+
+  const dispatch = useDispatch();
+  const { signIn, loading, error } = useSignIn();
+
   const { control, handleSubmit } = useForm<TFormData>({
-    values: { email: '', password: '' },
+    defaultValues: {
+      email: '',
+      password: '',
+    },
     mode: 'onChange',
   });
 
-  const dispatch = useDispatch();
+  const submitClickHandler: SubmitHandler<TFormData> = async values => {
+    try {
+      const userData = await signIn(
+        values.email.trim(),
+        values.password,
+      );
 
-  const submitClickHandler: SubmitHandler<TFormData> = React.useCallback(
-    values => {
-      setIsLoading(true);
+      const loginResponse = {
+        success: true,
+        message: 'Login successful!',
+        responseData: {
+          userName: userData.name || userData.email,
+          token: userData.id,
+          refreshToken: '',
+        },
+      };
 
-      setTimeout(() => {
-        setIsLoading(false);
-        const loginResponse: TValidateLoginDetailResponse = {
-          success: false,
-          message: 'Login Success!',
-          responseData: {
-            userName: values?.email ?? '',
-            token: (values?.email ?? '') + (values?.password ?? ''),
-            refreshToken: (values?.email ?? '') + (values?.password ?? ''),
-          },
-        };
-        loginUser(dispatch, loginResponse);
-      }, 2500);
-    },
-    [],
-  );
+      loginUser(dispatch, loginResponse);
+    } catch (err) {
+      console.log('Login failed:', err);
+    }
+  };
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'}>
-      <Pressable style={{ flex: 1, width: '100%' }} onPress={Keyboard.dismiss}>
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+      <Pressable
+        style={{ flex: 1, width: '100%' }}
+        onPress={Keyboard.dismiss}
+      >
         <FullScreenContainer
           headerColor={theme.colors.background}
           style={{
@@ -73,8 +82,14 @@ const LoginScreen: React.FC<LoginScreenProps> = props => {
         >
           <Controller
             control={control}
-            name={'email'}
-            rules={{ required: 'Email cannot be empty!' }}
+            name="email"
+            rules={{
+              required: 'Email cannot be empty!',
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: 'Enter a valid email address!',
+              },
+            }}
             render={({
               field: { onBlur, value, onChange },
               fieldState: { error },
@@ -83,8 +98,8 @@ const LoginScreen: React.FC<LoginScreenProps> = props => {
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
-                labelValue={'Email'}
-                placeholder={'Enter Email...'}
+                labelValue="Email"
+                placeholder="Enter Email..."
                 errorValue={error?.message ?? ''}
               />
             )}
@@ -92,8 +107,10 @@ const LoginScreen: React.FC<LoginScreenProps> = props => {
 
           <Controller
             control={control}
-            name={'password'}
-            rules={{ required: 'Password cannot be empty!' }}
+            name="password"
+            rules={{
+              required: 'Password cannot be empty!',
+            }}
             render={({
               field: { onBlur, value, onChange },
               fieldState: { error },
@@ -103,32 +120,43 @@ const LoginScreen: React.FC<LoginScreenProps> = props => {
                 onChangeText={onChange}
                 onBlur={onBlur}
                 outlineColor={theme.colors.borderColor.regular}
-                labelValue={'Password'}
-                placeholder={'Enter Password...'}
+                labelValue="Password"
+                placeholder="Enter Password..."
                 secureTextEntry={!showPassword}
                 right={
                   <TextInput.Icon
                     icon={showPassword ? 'eye-off' : 'eye'}
-                    onPress={() => setShowPassword(prev => !prev)}
+                    onPress={() =>
+                      setShowPassword(previous => !previous)
+                    }
                   />
                 }
                 errorValue={error?.message ?? ''}
               />
             )}
           />
+
+          {error ? (
+            <BaseText style={{ color: theme.colors.error }}>
+              {error}
+            </BaseText>
+          ) : null}
+
           <BounceView>
             <BaseText
               variant="labelMedium"
               style={{ color: theme.colors.textColor.primary }}
             >
-              Forget Password?
+              Forgot Password?
             </BaseText>
           </BounceView>
+
           <AnimatedLoaderButton
-            isLoading={isLoading}
-            title={'Login'}
+            isLoading={loading}
+            title="Login"
             onPress={handleSubmit(submitClickHandler)}
           />
+
           <BounceView
             style={{
               flexDirection: 'row',
@@ -136,7 +164,9 @@ const LoginScreen: React.FC<LoginScreenProps> = props => {
               alignItems: 'center',
               justifyContent: 'center',
             }}
-            onPress={() => props?.navigation?.navigate('SignUpScreen')}
+            onPress={() =>
+              props.navigation.navigate('SignUpScreen')
+            }
           >
             <BaseText>Don't have an account?</BaseText>
             <BaseText

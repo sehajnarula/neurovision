@@ -12,6 +12,8 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { DashbordBottomTabBarParamList } from 'types/navigation_types';
 import { ms } from 'utilities/scale_utils';
 import { style } from './style';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'store';
 
 type ProfileScreenProps = MaterialBottomTabScreenProps<
   DashbordBottomTabBarParamList,
@@ -21,6 +23,7 @@ type ProfileScreenProps = MaterialBottomTabScreenProps<
 const ProfileScreen: React.FC<ProfileScreenProps> = props => {
   const theme = useTheme();
   const styles = style(theme);
+  const userData = useSelector((state: RootState) => state.loginData.loginData);
   return (
     <ScrollView
       contentContainerStyle={styles.container}
@@ -28,12 +31,12 @@ const ProfileScreen: React.FC<ProfileScreenProps> = props => {
     >
       <Animated.View entering={FadeInDown.duration(500)} style={styles.header}>
         <Avatar.Text size={ms(90)} label="SN" />
-        <BaseText style={[styles.name, {}]}>Shubham Negi</BaseText>
-        <BaseText
+        <BaseText style={[styles.name, {}]}>{userData?.userName}</BaseText>
+        {/* <BaseText
           style={[styles.email, { color: theme.colors.textColor.placeholder }]}
         >
-          shubham@example.com
-        </BaseText>
+          {userData?.email}
+        </BaseText> */}
       </Animated.View>
 
       <View style={styles.section}>
