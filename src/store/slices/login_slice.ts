@@ -1,13 +1,17 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   TValidateLoginDetailData,
   TValidateLoginDetailResponse,
 } from 'types/api_response_data_models';
-import {AsyncStorageKeys} from 'utilities/async_storage_keys';
+import { AsyncStorageKeys } from 'utilities/async_storage_keys';
 import {
   ClearDataFromAsyncStorage,
   SaveDataToAsyncStorage,
 } from 'utilities/async_storage_utils';
+import {
+  getAuth,
+  signOut,
+} from '@react-native-firebase/auth';
 
 export type TLoginData = {
   isUserLoggedIn: boolean;
@@ -54,5 +58,5 @@ const loginSlice = createSlice({
   },
 });
 
-export const {userLogin, userLogout} = loginSlice.actions;
-export default loginSlice.reducer;
+export const { userLogin, userLogout } = loginSlice.actions;
+export default loginSlice.reducer; 

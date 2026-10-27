@@ -14,6 +14,9 @@ import { ms } from 'utilities/scale_utils';
 import { style } from './style';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'store';
+import ThemeSelectorDialog from 'components/modals/theme_selector_modal';
+import { useDialog } from 'context/app_dialog_provider';
+import { logoutUser } from 'utilities/utils';
 
 type ProfileScreenProps = MaterialBottomTabScreenProps<
   DashbordBottomTabBarParamList,
@@ -24,6 +27,21 @@ const ProfileScreen: React.FC<ProfileScreenProps> = props => {
   const theme = useTheme();
   const styles = style(theme);
   const userData = useSelector((state: RootState) => state.loginData.loginData);
+  const [showSelectThemeDialog, setShowSelectThemeDialog] = React.useState(false);
+  const { showDialog, hideDialog } = useDialog();
+  const dispatch = useDispatch();
+
+  const handleLogoutClick = React.useCallback(() => {
+    showDialog({
+      message: 'Do you want to logout?',
+      title: 'Logout',
+      actionType: 'error',
+      isConfirmDestructive: true,
+      onConfirm: () => logoutUser(dispatch),
+      onDismiss: hideDialog,
+    });
+  }, []);
+
   return (
     <ScrollView
       contentContainerStyle={styles.container}
@@ -69,6 +87,18 @@ const ProfileScreen: React.FC<ProfileScreenProps> = props => {
         >
           Edit Profile
         </Button>
+
+        <Button
+          mode="outlined"
+          style={styles.actionBtn}
+          onPress={() => setShowSelectThemeDialog(true)}>
+          Change Theme
+        </Button>
+
+        <ThemeSelectorDialog
+          visible={showSelectThemeDialog}
+          onClose={() => setShowSelectThemeDialog(false)}
+        />
 
         <Button
           mode="outlined"

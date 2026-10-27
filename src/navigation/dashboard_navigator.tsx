@@ -25,7 +25,6 @@ const DashboardNavigator: React.FC = () => {
     >
       <TabBar.Screen name={'HomeScreen'} component={HomeScreen} />
       <TabBar.Screen name={'ProfileScreen'} component={ProfileScreen} />
-      <TabBar.Screen name={'SettingsScreen'} component={SettingsScreen} />
     </TabBar.Navigator>
   );
 };
