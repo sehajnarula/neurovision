@@ -8,10 +8,6 @@ import {
   ClearDataFromAsyncStorage,
   SaveDataToAsyncStorage,
 } from 'utilities/async_storage_utils';
-import {
-  getAuth,
-  signOut,
-} from '@react-native-firebase/auth';
 
 export type TLoginData = {
   isUserLoggedIn: boolean;

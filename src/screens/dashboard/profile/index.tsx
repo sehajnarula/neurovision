@@ -109,9 +109,9 @@ const ProfileScreen: React.FC<ProfileScreenProps> = props => {
         </Button>
 
         <Button
-          mode="contained"
-          style={[styles.actionBtn, { backgroundColor: theme.colors.error }]}
-          onPress={() => console.log('Logout')}
+          mode="outlined"
+          style={styles.actionBtn}
+          onPress={() => handleLogoutClick()}
         >
           Logout
         </Button>

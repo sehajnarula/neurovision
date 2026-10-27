@@ -1,5 +1,6 @@
 import { Dispatch } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
+import { getAuth, signOut } from '@react-native-firebase/auth';
 import { Alert, AlertButton, AlertOptions } from 'react-native';
 import { MessageType, showMessage } from 'react-native-flash-message';
 import { userLogin, userLogout } from 'store/slices/login_slice';
@@ -115,10 +116,21 @@ export const loginUser = async (
 };
 
 /**
- * Logs out the user by dispatching the logout action and clearing application data.
+ * Logs out the user by signing out from Firebase, dispatching the logout action,
+ * and clearing all application data from MMKV storage.
+ * Navigation back to the login screen happens automatically via the root navigator
+ * which reacts to the Redux `isUserLoggedIn` flag becoming false.
+ *
  * @param {Dispatch} dispatch - The Redux dispatch function to send actions to the store.
  * @returns {Promise<void>} - A promise that resolves when the logout actions are dispatched.
  */
 export const logoutUser = async (dispatch: Dispatch): Promise<void> => {
+  try {
+    await signOut(getAuth());
+  } catch (error) {
+    console.error('Firebase sign-out error:', error);
+  }
+  // Clears MMKV data and updates Redux state (isUserLoggedIn → false),
+  // which triggers the root navigator to switch to the auth stack.
   dispatch(userLogout());
 };

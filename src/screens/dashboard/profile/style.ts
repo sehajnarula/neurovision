@@ -41,7 +41,6 @@ export const style = (theme: MD3CustomTheme) =>
     itemValue: {
       fontSize: ms(14),
       marginLeft: ms(4),
-      color: '#666',
     },
     actionBtn: {
       marginTop: vs(10),
