@@ -3,6 +3,7 @@ export type AppStackParamList = {
   PatientDashboardScreen: undefined;
   RecipesScreen: undefined;
   UpdateUserScreen: undefined;
+  CreateReportScreen: undefined;
 };
 
 export type AuthenticationStackParamList = {

@@ -50,24 +50,13 @@ const ProfileScreen: React.FC<ProfileScreenProps> = props => {
       <Animated.View entering={FadeInDown.duration(500)} style={styles.header}>
         <Avatar.Text size={ms(90)} label={userData?.userName?.slice(0, 2).toUpperCase() || 'NV'} />
         <BaseText style={[styles.name, {}]}>{userData?.userName}</BaseText>
+        <BaseText style={styles.itemValue}>+91{userData?.phoneNumber}</BaseText>
         {/* <BaseText
           style={[styles.email, { color: theme.colors.textColor.placeholder }]}
         >
           {userData?.email}
         </BaseText> */}
       </Animated.View>
-
-      <View style={styles.section}>
-        <BaseText
-          style={[styles.sectionTitle, { color: theme.colors.primary }]}
-        >
-          Account Info
-        </BaseText>
-        <Divider style={styles.divider} />
-
-        <BaseText style={styles.itemLabel}>Phone</BaseText>
-        {/* <BaseText style={styles.itemValue}>+91 {userData}</BaseText> */}
-      </View>
 
       <View style={styles.section}>
         <BaseText

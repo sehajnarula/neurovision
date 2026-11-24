@@ -17,7 +17,7 @@ type HomeScreenProps = MaterialBottomTabScreenProps<
   'HomeScreen'
 >;
 
-const HomeScreen: React.FC<HomeScreenProps> = () => {
+const HomeScreen: React.FC<HomeScreenProps> = props => {
   const { showDialog, hideDialog } = useDialog();
   const dispatch = useDispatch();
   const userData = useSelector((state: RootState) => state.loginData.loginData);
@@ -50,7 +50,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
       <BaseText
         style={[theme.fonts.displayLarge, { color: theme.colors.textColor.primary, alignSelf: 'flex-end', marginRight: ms(15) }]}
         children='+'
-      />
+        onPress={() => { props.navigation.getParent()?.navigate('CreateReportScreen') }} />
       {/* <View
         style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
         <BaseText

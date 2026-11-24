@@ -1,21 +1,22 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {useThemeContext} from 'context/theme_provider';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useThemeContext } from 'context/theme_provider';
 import React from 'react';
-import {AppState, AppStateStatus, NativeEventSubscription} from 'react-native';
-import {useTheme} from 'react-native-paper';
-import {useDispatch} from 'react-redux';
+import { AppState, AppStateStatus, NativeEventSubscription } from 'react-native';
+import { useTheme } from 'react-native-paper';
+import { useDispatch } from 'react-redux';
 import DashboardScreen from 'screens/dashboard';
 import UpdateUserScreen from 'screens/dashboard/updateUser';
+import CreateReportScreen from 'screens/dashboard/createReport';
 import PatientDashboardNavigator from 'navigation/patient_dashboard_navigator';
-import {setShowPrivacyGuard} from 'store/slices/app_data_slice';
-import {AppStackParamList} from 'types/navigation_types';
-import {IS_ANDROID, IS_IOS} from 'utilities/constants';
+import { setShowPrivacyGuard } from 'store/slices/app_data_slice';
+import { AppStackParamList } from 'types/navigation_types';
+import { IS_ANDROID, IS_IOS } from 'utilities/constants';
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
 
 const AppNavigator: React.FC = () => {
   const theme = useTheme();
-  const {isDarkTheme} = useThemeContext();
+  const { isDarkTheme } = useThemeContext();
   const dispatch = useDispatch();
 
   React.useEffect(() => {
@@ -48,6 +49,7 @@ const AppNavigator: React.FC = () => {
       }}>
       <Stack.Screen name={'DashBoardScreen'} component={DashboardScreen} />
       <Stack.Screen name={'UpdateUserScreen'} component={UpdateUserScreen} />
+      <Stack.Screen name={'CreateReportScreen'} component={CreateReportScreen} />
     </Stack.Navigator>
   );
 };

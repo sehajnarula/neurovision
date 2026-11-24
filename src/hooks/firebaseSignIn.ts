@@ -44,6 +44,7 @@ export const useSignIn = () => {
                     userDataFromDB?.name ||
                     firebaseUser.displayName ||
                     '',
+                phoneNumber: userDataFromDB?.phoneNumber || '',
                 userType: userDataFromDB?.userType ?? 'doctor',
             };
 

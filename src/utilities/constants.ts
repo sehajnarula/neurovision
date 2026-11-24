@@ -83,3 +83,6 @@ export const MaterialIcon = {
   TIMER_SAND: 'timer-sand',
   PROGRESS_CLOCK: 'progress-clock',
 };
+
+export const TUMOR_SEGMENTATION_BASE_URL =
+  'http://ipaddress:8000';
