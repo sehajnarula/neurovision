@@ -31,7 +31,8 @@ export const style = (theme: MD3CustomTheme) =>
       marginBottom: vs(8),
     },
     divider: {
-      marginBottom: vs(12),
+      marginBottom: vs(8),
+      backgroundColor: theme.colors.textColor.regular
     },
     itemLabel: {
       fontSize: ms(14),

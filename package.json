@@ -21,6 +21,7 @@
     "@hookform/resolvers": "~5.9.0",
     "@react-native-community/geolocation": "~3.4.0",
     "@react-native-community/netinfo": "~12.0.1",
+    "@react-native-documents/picker": "^12.1.0",
     "@react-native-firebase/app": "^26.2.0",
     "@react-native-firebase/auth": "^26.2.0",
     "@react-native-firebase/firestore": "^26.2.0",

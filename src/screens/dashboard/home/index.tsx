@@ -7,8 +7,7 @@ import { MaterialBottomTabScreenProps, useTheme } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'store';
 import { DashbordBottomTabBarParamList } from 'types/navigation_types';
-import { vs } from 'utilities/scale_utils';
-import { logoutUser } from 'utilities/utils';
+import { ms, vs } from 'utilities/scale_utils';
 
 type HomeScreenProps = MaterialBottomTabScreenProps<
   DashbordBottomTabBarParamList,
@@ -16,28 +15,24 @@ type HomeScreenProps = MaterialBottomTabScreenProps<
 >;
 
 const HomeScreen: React.FC<HomeScreenProps> = () => {
-  const theme = useTheme();
   const { showDialog, hideDialog } = useDialog();
   const dispatch = useDispatch();
   const userData = useSelector((state: RootState) => state.loginData.loginData);
-
-  const handleLogoutClick = React.useCallback(() => {
-    showDialog({
-      message: 'Do you want to logout?',
-      title: 'Logout',
-      actionType: 'error',
-      isConfirmDestructive: true,
-      onConfirm: () => logoutUser(dispatch),
-      onDismiss: hideDialog,
-    });
-  }, []);
+  const theme = useTheme();
 
   return (
     <View style={style.mainContainer}>
       <BaseText
-        style={theme.fonts.displayLarge}
-        children={`Welcome ${userData?.userName ?? ''}`}
+        style={[theme.fonts.displayLarge, { color: theme.colors.textColor.primary, alignSelf: 'flex-end', marginRight: ms(15) }]}
+        children='+'
       />
+      <View
+        style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+        <BaseText
+          style={[theme.fonts.displayLarge, { marginHorizontal: ms(20), textAlign: 'center' }]}
+          children={`Welcome ${userData?.userName ?? ''}, There are no reports to check right now`}
+        />
+      </View>
     </View>
   );
 };
@@ -48,7 +43,8 @@ const style = StyleSheet.create({
   mainContainer: {
     flex: 1,
     gap: vs(25),
-    justifyContent: 'center',
-    alignItems: 'center',
+    // justifyContent: 'center',
+    // alignItems: 'center',
   },
+
 });

@@ -1,0 +1,32 @@
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import BottomTabBarView from 'components/organisms/bottom_tab_bar';
+import React from 'react';
+import { View } from 'react-native';
+import { useTheme } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import HomeScreen from 'screens/dashboard/home';
+import ProfileScreen from 'screens/dashboard/profile';
+import SettingsScreen from 'screens/dashboard/settings';
+import { PatientDashbordBottomTabBarParamList } from 'types/navigation_types';
+
+const TabBar = createBottomTabNavigator<PatientDashbordBottomTabBarParamList>();
+
+const PatientDashboardNavigator: React.FC = () => {
+    const { top } = useSafeAreaInsets();
+    const theme = useTheme();
+    return (
+        <TabBar.Navigator
+            tabBar={props => <BottomTabBarView {...props} />}
+            screenOptions={{
+                header: () => (
+                    <View style={{ height: top, width: theme.dimensions.width }} />
+                ),
+            }}
+        >
+            <TabBar.Screen name={'HomeScreen'} component={HomeScreen} />
+            <TabBar.Screen name={'ProfileScreen'} component={ProfileScreen} />
+        </TabBar.Navigator>
+    );
+};
+
+export default PatientDashboardNavigator;
