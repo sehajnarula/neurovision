@@ -52,7 +52,8 @@ export const useSignUp = () => {
                 name,
                 email,
                 createdAt: serverTimestamp(),
-                phoneNumber
+                phoneNumber,
+                userType: 'patient',
             });
 
             // 5. Create application user object

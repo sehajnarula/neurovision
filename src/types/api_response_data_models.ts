@@ -8,4 +8,5 @@ export type TValidateLoginDetailData = {
   userName: string;
   token: string;
   refreshToken: string;
+  userType: 'patient' | 'doctor';
 };

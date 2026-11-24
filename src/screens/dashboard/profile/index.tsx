@@ -48,7 +48,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = props => {
       showsVerticalScrollIndicator={false}
     >
       <Animated.View entering={FadeInDown.duration(500)} style={styles.header}>
-        <Avatar.Text size={ms(90)} label="SN" />
+        <Avatar.Text size={ms(90)} label={userData?.userName?.slice(0, 2).toUpperCase() || 'NV'} />
         <BaseText style={[styles.name, {}]}>{userData?.userName}</BaseText>
         {/* <BaseText
           style={[styles.email, { color: theme.colors.textColor.placeholder }]}
@@ -66,10 +66,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = props => {
         <Divider style={styles.divider} />
 
         <BaseText style={styles.itemLabel}>Phone</BaseText>
-        <BaseText style={styles.itemValue}>+91 98765 43210</BaseText>
-
-        <BaseText style={styles.itemLabel}>Address</BaseText>
-        <BaseText style={styles.itemValue}>221B Baker Street, London</BaseText>
+        {/* <BaseText style={styles.itemValue}>+91 {userData}</BaseText> */}
       </View>
 
       <View style={styles.section}>
@@ -83,7 +80,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = props => {
         <Button
           mode="outlined"
           style={styles.actionBtn}
-          onPress={() => console.log('Edit Profile')}
+          onPress={() => props.navigation.getParent()?.navigate('UpdateUserScreen')}
         >
           Edit Profile
         </Button>
@@ -100,13 +97,13 @@ const ProfileScreen: React.FC<ProfileScreenProps> = props => {
           onClose={() => setShowSelectThemeDialog(false)}
         />
 
-        <Button
+        {/* <Button
           mode="outlined"
           style={styles.actionBtn}
           onPress={() => console.log('Change Password')}
         >
           Change Password
-        </Button>
+        </Button> */}
 
         <Button
           mode="outlined"

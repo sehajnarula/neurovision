@@ -5,6 +5,8 @@ import {AppState, AppStateStatus, NativeEventSubscription} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {useDispatch} from 'react-redux';
 import DashboardScreen from 'screens/dashboard';
+import UpdateUserScreen from 'screens/dashboard/updateUser';
+import PatientDashboardNavigator from 'navigation/patient_dashboard_navigator';
 import {setShowPrivacyGuard} from 'store/slices/app_data_slice';
 import {AppStackParamList} from 'types/navigation_types';
 import {IS_ANDROID, IS_IOS} from 'utilities/constants';
@@ -45,6 +47,7 @@ const AppNavigator: React.FC = () => {
         statusBarBackgroundColor: theme.colors.statusBar.backgroundColor,
       }}>
       <Stack.Screen name={'DashBoardScreen'} component={DashboardScreen} />
+      <Stack.Screen name={'UpdateUserScreen'} component={UpdateUserScreen} />
     </Stack.Navigator>
   );
 };

@@ -54,6 +54,7 @@ const LoginScreen: React.FC<LoginScreenProps> = props => {
           userName: userData.name || userData.email,
           token: userData.id,
           refreshToken: '',
+          userType: userData.userType as 'patient' | 'doctor',
         },
       };
 

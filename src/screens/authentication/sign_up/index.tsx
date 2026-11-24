@@ -227,12 +227,12 @@ const SignUpScreen: React.FC<SignUpScreenProps> = props => {
           ) : null}
 
           <BounceView>
-            <BaseText
+            {/* <BaseText
               variant="labelMedium"
               style={{ color: theme.colors.textColor.primary }}
             >
               Forgot Password?
-            </BaseText>
+            </BaseText> */}
           </BounceView>
 
           <AnimatedLoaderButton

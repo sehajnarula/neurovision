@@ -4,9 +4,9 @@ import React from 'react';
 import { View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import HomeScreen from 'screens/dashboard/home';
-import ProfileScreen from 'screens/dashboard/profile';
-import SettingsScreen from 'screens/dashboard/settings';
+import HomeScreen from 'screens/patient_dashboard/home';
+import ProfileScreen from 'screens/patient_dashboard/profile';
+import SettingsScreen from 'screens/patient_dashboard/settings';
 import { PatientDashbordBottomTabBarParamList } from 'types/navigation_types';
 
 const TabBar = createBottomTabNavigator<PatientDashbordBottomTabBarParamList>();

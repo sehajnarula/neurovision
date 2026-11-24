@@ -25,10 +25,6 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
       <View
         style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
         <BaseText
-          style={[theme.fonts.displayLarge, { color: theme.colors.textColor.primary, alignSelf: 'flex-end', marginRight: ms(15) }]}
-          children='+'
-        />
-        <BaseText
           style={[theme.fonts.displayLarge, { marginHorizontal: ms(20), textAlign: 'center' }]}
           children={`Welcome ${userData?.userName ?? ''}, There are no approved reports.`}
         />
