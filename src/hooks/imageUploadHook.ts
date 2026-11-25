@@ -1,31 +1,29 @@
+
 import { useState } from 'react';
 import axios from 'axios';
 
-const CLOUD_NAME = 'dhysnyzr8';
+const CLOUD_NAME = 'key';
 const UPLOAD_PRESET = 'my_unsigned_upload';
 
-export const useUploadOnCloudinary = () => {
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState(null);
+const cloudinaryApi = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
-    const uploadFile = async (file: any) => {
+export const useUploadOnCloudinary = () => {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<any>(null);
+
+    const uploadImage = async (imageData: string) => {
         try {
             setLoading(true);
             setError(null);
 
-            const data = new FormData();
+            const formData = new FormData();
 
-            data.append('file', {
-                uri: file.uri,
-                type: file.type,
-                name: file.name,
-            });
+            formData.append('file', imageData);
+            formData.append('upload_preset', UPLOAD_PRESET);
 
-            data.append('upload_preset', UPLOAD_PRESET);
-
-            const res = await axios.post(
-                `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`,
-                data,
+            const response = await axios.post(
+                cloudinaryApi,
+                formData,
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data',
@@ -33,10 +31,13 @@ export const useUploadOnCloudinary = () => {
                 }
             );
 
-            return res.data;
-
+            return response.data;
         } catch (err: any) {
-            console.error('Upload error:', err.response?.data || err.message);
+            console.log(
+                'Cloudinary Error:',
+                err.response?.data || err.message
+            );
+
             setError(err);
             return null;
         } finally {
@@ -45,7 +46,7 @@ export const useUploadOnCloudinary = () => {
     };
 
     return {
-        uploadFile,
+        uploadImage,
         loading,
         error,
     };

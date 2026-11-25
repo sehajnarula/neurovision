@@ -10,7 +10,10 @@ import CreateReportScreen from 'screens/dashboard/createReport';
 import PatientDashboardNavigator from 'navigation/patient_dashboard_navigator';
 import { setShowPrivacyGuard } from 'store/slices/app_data_slice';
 import { AppStackParamList } from 'types/navigation_types';
+import ViewReportScreen from 'screens/dashboard/viewReport';
 import { IS_ANDROID, IS_IOS } from 'utilities/constants';
+import PatientUpdateUserScreen from 'screens/patient_dashboard/patientUpdateUser';
+import PatientViewReportScreen from 'screens/patient_dashboard/patientviewreport';
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
 
@@ -50,6 +53,20 @@ const AppNavigator: React.FC = () => {
       <Stack.Screen name={'DashBoardScreen'} component={DashboardScreen} />
       <Stack.Screen name={'UpdateUserScreen'} component={UpdateUserScreen} />
       <Stack.Screen name={'CreateReportScreen'} component={CreateReportScreen} />
+      <Stack.Screen name={'ViewReportScreen'} component={ViewReportScreen} />
+      <Stack.Screen
+        name="PatientDashboardScreen"
+        component={PatientDashboardNavigator}
+      />
+
+      <Stack.Screen
+        name="PatientUpdateUserScreen"
+        component={PatientUpdateUserScreen}
+      />
+      <Stack.Screen
+        name="PatientViewReportScreen"
+        component={PatientViewReportScreen}
+      />
     </Stack.Navigator>
   );
 };

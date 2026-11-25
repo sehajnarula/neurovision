@@ -124,7 +124,7 @@ const SplashScreen: React.FC<SplashScreenProps> = props => {
             fontFamily: FONT_BOLD,
             fontWeight: 'bold',
           }}
-          children={'My App'}
+          children={'NeuroVision'}
         />
       </Animated.View>
       <Animated.View
@@ -136,7 +136,7 @@ const SplashScreen: React.FC<SplashScreenProps> = props => {
           lineAnimatedStyle,
         ]}
       />
-      <Animated.View style={bottomTextAnimationStyle}>
+      {/* <Animated.View style={bottomTextAnimationStyle}>
         <BaseText
           style={{
             color: TO_COLOR,
@@ -146,7 +146,7 @@ const SplashScreen: React.FC<SplashScreenProps> = props => {
           }}
           children={'A Demo App'}
         />
-      </Animated.View>
+      </Animated.View> */}
     </View>
   );
 };

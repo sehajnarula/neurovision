@@ -1,18 +1,19 @@
 
 import React, { useEffect, useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Keyboard, Pressable, View, PermissionsAndroid, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Keyboard, Pressable, View, PermissionsAndroid, Alert, TouchableOpacity, ActivityIndicator, FlatList, ScrollView } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { useTheme } from 'react-native-paper';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { getAuth } from '@react-native-firebase/auth';
+import KeyboardAwareScrollView from 'react-native-keyboard-controller';
 
 import BaseText from 'components/base_components/base_text';
 import BaseTextInput from 'components/base_components/base_text_input';
 import FullScreenContainer from 'components/hoc/full_screen_container';
 import AnimatedLoaderButton from 'components/molecules/animated_loader_button';
 import useTumorPrediction from '../../../hooks/analyzeMri';
-
+import { useUploadOnCloudinary } from '../../../hooks/imageUploadHook';
 import { AppStackParamList } from 'types/navigation_types';
 import { ms, vs } from 'utilities/scale_utils';
 import { useUpdateUser } from '../../../hooks/firebaseUserUpdate';
@@ -22,6 +23,18 @@ import {
     isErrorWithCode,
     errorCodes,
 } from '@react-native-documents/picker';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store';
+
+import {
+    getFirestore,
+    collection,
+    query,
+    where,
+    getDocs,
+    addDoc,
+    serverTimestamp,
+} from '@react-native-firebase/firestore';
 
 import { Image } from 'react-native';
 
@@ -51,11 +64,20 @@ interface MRIUploadFiles {
     t2: MRIFile;
 }
 
+interface Patient {
+    uid: string;
+    name: string;
+    email?: string;
+    phoneNumber?: string;
+}
+
 const CreateReportScreen: React.FC<CreateReportScreenProps> = props => {
     const theme = useTheme();
+    const [patients, setPatients] = useState<Patient[]>([]);
+    const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
+    const [fetchingPatients, setFetchingPatients] = useState(false);
+    const [savingReport, setSavingReport] = useState(false);
 
-    // Get logged-in user's Firebase UID
-    const uid = getAuth().currentUser?.uid;
     const [selectedFiles, setSelectedFiles] =
         useState<MRIUploadFiles | null>(null);
 
@@ -65,6 +87,11 @@ const CreateReportScreen: React.FC<CreateReportScreenProps> = props => {
         loading,
         error,
     } = useUpdateUser();
+
+    const {
+        uploadImage,
+        loading: uploadingImage,
+    } = useUploadOnCloudinary();
 
     const {
         control,
@@ -84,6 +111,162 @@ const CreateReportScreen: React.FC<CreateReportScreenProps> = props => {
         data: predictionData,
         error: predictionError,
     } = useTumorPrediction();
+
+    const fetchPatients = async () => {
+        try {
+            setFetchingPatients(true);
+
+            const db = getFirestore();
+
+            const patientsQuery = query(
+                collection(db, 'users'),
+                where('userType', '==', 'patient')
+            );
+
+            const snapshot = await getDocs(patientsQuery);
+
+            const patientList: Patient[] = snapshot.docs.map(doc => ({
+                uid: doc.id,
+                name: doc.data().name ?? 'Unknown Patient',
+                email: doc.data().email ?? '',
+                phoneNumber: doc.data().phoneNumber ?? '',
+            }));
+            console.log("patientList", patientList);
+            setPatients(patientList);
+
+        } catch (error) {
+            console.log('Error fetching patients:', error);
+        } finally {
+            setFetchingPatients(false);
+        }
+    };
+
+    const handleApproveReport = async () => {
+        const doctorId = getAuth().currentUser?.uid;
+        if (!selectedPatientId) {
+            Alert.alert('Select Patient', 'Please select a patient.');
+            return;
+        }
+
+        if (!doctorId) {
+            Alert.alert('Authentication Error', 'Doctor ID not found.');
+            return;
+        }
+
+        if (!predictionData) {
+            Alert.alert('Error', 'Please analyze the MRI first.');
+            return;
+        }
+
+        try {
+            setSavingReport(true);
+
+            // Step 1: Upload axial preview to Cloudinary
+
+            const axialImage = predictionData.previews.axial.image;
+
+            const cloudinaryResponse = await uploadImage(axialImage);
+
+            if (!cloudinaryResponse?.secure_url) {
+                throw new Error('Unable to upload image to Cloudinary.');
+            }
+
+            const imageUrl = cloudinaryResponse.secure_url;
+
+            console.log('Cloudinary Image URL:', imageUrl);
+
+            // Step 2: Prepare Firestore report
+
+            const reportData = {
+                patientId: selectedPatientId,
+                doctorId: doctorId,
+
+                tumorDetected: predictionData.tumor_detected,
+
+                wholeTumorMl: predictionData.whole_tumor_ml,
+                tumorCoreMl: predictionData.tumor_core_ml,
+
+                volumeMl: {
+                    necroticCore:
+                        predictionData.volume_ml.necrotic_core,
+
+                    edema:
+                        predictionData.volume_ml.edema,
+
+                    enhancingTumor:
+                        predictionData.volume_ml.enhancing_tumor,
+                },
+
+                voxels: {
+                    necroticCore:
+                        predictionData.voxels.necrotic_core,
+
+                    edema:
+                        predictionData.voxels.edema,
+
+                    enhancingTumor:
+                        predictionData.voxels.enhancing_tumor,
+                },
+
+                voxelVolumeMm3: predictionData.voxel_volume_mm3,
+
+                // Cloudinary URL
+                image: imageUrl,
+
+                previewSlices: {
+                    axial: predictionData.previews.axial.slice_index,
+                    coronal: predictionData.previews.coronal.slice_index,
+                    sagittal: predictionData.previews.sagittal.slice_index,
+                },
+
+                createdAt: serverTimestamp(),
+            };
+
+            const db = getFirestore();
+
+            const reportRef = await addDoc(
+                collection(db, 'reports'),
+                reportData
+            );
+
+            console.log('Report ID:', reportRef.id);
+
+            Alert.alert(
+                'Report Approved',
+                'Report has been successfully saved.',
+                [
+                    {
+                        text: 'OK',
+                        onPress: () => props.navigation.goBack(),
+                    },
+                ]
+            );
+
+        } catch (error) {
+            console.log('Report Saving Error:', error);
+
+            Alert.alert(
+                'Error',
+                error instanceof Error
+                    ? error.message
+                    : 'Unable to save report.'
+            );
+
+        } finally {
+            setSavingReport(false);
+        }
+    };
+
+    const handleSelectPatient = (patient: Patient) => {
+        setSelectedPatientId(patient.uid);
+
+        console.log('Selected Patient:', patient.name);
+        console.log('Patient ID:', patient.uid);
+    };
+
+    useEffect(() => {
+        fetchPatients();
+    }, []);
 
     const handlePickFiles = async () => {
         try {
@@ -197,52 +380,19 @@ const CreateReportScreen: React.FC<CreateReportScreenProps> = props => {
         }
     };
 
-    // Fetch existing user details when screen opens
-    useEffect(() => {
-        const loadUserDetails = async () => {
-            if (!uid) {
-                return;
-            }
-
-            try {
-                const userData = await fetchUserDetails(uid);
-
-                // Populate form fields
-                reset({
-                    name: userData.name ?? '',
-                    phoneNumber: userData.phoneNumber ?? '',
-                });
-            } catch (err) {
-                console.log('Unable to fetch user details:', err);
-            }
-        };
-
-        loadUserDetails();
-    }, [uid]);
-
-    // Update user details
-    const submitClickHandler: SubmitHandler<TFormData> = async values => {
-        try {
-            await updateUserDetails(
-                values.name.trim(),
-                values.phoneNumber.trim(),
-            );
-
-            console.log('User details updated successfully');
-
-            // Navigate back after successful update
-            props.navigation.goBack();
-        } catch (err) {
-            console.log('Unable to update user details:', err);
-        }
-    };
     return (
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-            <View
+            <ScrollView
                 style={{
                     flex: 1,
+                }}
+                contentContainerStyle={{
+                    flexGrow: 1,
                     padding: ms(16),
-                }}>
+                    paddingBottom: vs(20),
+                }}
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={false}>
 
                 {selectedFiles ? (
                     // Files selected: display them at the top
@@ -299,31 +449,63 @@ const CreateReportScreen: React.FC<CreateReportScreenProps> = props => {
                             </View>
                         )}
 
-                        {predictionData ? (
-                            <TouchableOpacity
-                                activeOpacity={0.9}
-                                onPress={handleAnalyze}
-                                disabled={analyzing}
-                                style={{
-                                    backgroundColor: theme.colors.primary,
-                                    borderColor: theme.colors.borderColor.regular,
-                                    borderRadius: 4,
-                                    paddingVertical: vs(8),
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    marginTop: vs(16),
-                                    opacity: analyzing ? 0.7 : 1,
-                                }}
-                            >
-                                {analyzing ? (
-                                    <ActivityIndicator color={theme.colors.textColor.white} />
+                        {predictionData && (
+                            <View style={{ marginTop: vs(20) }}>
+
+                                <BaseText
+                                    style={{
+                                        fontSize: ms(18),
+                                        fontWeight: 'bold',
+                                        marginBottom: vs(10),
+                                    }}
+                                >
+                                    Select Patient
+                                </BaseText>
+
+                                {fetchingPatients ? (
+                                    <ActivityIndicator color={theme.colors.primary} />
                                 ) : (
-                                    <BaseText style={{ color: theme.colors.textColor.white }}>
-                                        Approve Report
-                                    </BaseText>
+                                    <FlatList
+                                        data={patients}
+                                        keyExtractor={item => item.uid}
+                                        scrollEnabled={false}
+                                        renderItem={({ item }) => {
+                                            const isSelected =
+                                                selectedPatientId === item.uid;
+
+                                            return (
+                                                <TouchableOpacity
+                                                    activeOpacity={0.8}
+                                                    onPress={() => handleSelectPatient(item)}
+                                                    style={{
+                                                        padding: ms(12),
+                                                        marginBottom: vs(8),
+                                                        borderWidth: 1,
+                                                        borderRadius: 8,
+                                                        borderColor: isSelected
+                                                            ? theme.colors.primary
+                                                            : theme.colors.borderColor.regular,
+                                                        backgroundColor: isSelected
+                                                            ? theme.colors.surfaceVariant
+                                                            : theme.colors.background,
+                                                    }}
+                                                >
+                                                    <BaseText style={{ fontWeight: 'bold' }}>
+                                                        {item.name}
+                                                    </BaseText>
+                                                </TouchableOpacity>
+                                            );
+                                        }}
+                                        ListEmptyComponent={
+                                            <BaseText>No patients found.</BaseText>
+                                        }
+                                    />
                                 )}
-                            </TouchableOpacity>
-                        ) : (
+
+                            </View>
+                        )}
+
+                        {/* {!predictionData && (
                             <TouchableOpacity
                                 activeOpacity={0.9}
                                 onPress={handleAnalyze}
@@ -347,7 +529,7 @@ const CreateReportScreen: React.FC<CreateReportScreenProps> = props => {
                                     </BaseText>
                                 )}
                             </TouchableOpacity>
-                        )}
+                        )} */}
 
                     </View>
                 ) : (
@@ -364,7 +546,63 @@ const CreateReportScreen: React.FC<CreateReportScreenProps> = props => {
 
                 )}
 
-            </View>
+            </ScrollView>
+
+            {/* Fixed Bottom Action Button */}
+            {selectedFiles && (
+                <View
+                    style={{
+                        flexShrink: 0,
+                        paddingHorizontal: ms(16),
+                        paddingTop: vs(12),
+                        paddingBottom: vs(50),
+                        backgroundColor: theme.colors.background,
+                        borderTopWidth: 1,
+                        borderTopColor: theme.colors.borderColor.regular,
+                        elevation: 10,
+                    }}
+                >
+                    <TouchableOpacity
+                        activeOpacity={0.9}
+                        onPress={
+                            predictionData
+                                ? handleApproveReport
+                                : handleAnalyze
+                        }
+                        disabled={
+                            analyzing ||
+                            savingReport ||
+                            (!!predictionData && !selectedPatientId)
+                        }
+                        style={{
+                            backgroundColor: theme.colors.primary,
+                            borderRadius: 6,
+                            paddingVertical: vs(12),
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            opacity: analyzing || savingReport ? 0.7 : 1,
+                        }}
+                    >
+                        {analyzing || savingReport ? (
+                            <ActivityIndicator
+                                color={theme.colors.textColor.white}
+                            />
+                        ) : (
+                            <BaseText
+                                style={{
+                                    color: theme.colors.textColor.white,
+                                    fontWeight: 'bold',
+                                }}
+                            >
+                                {predictionData
+                                    ? 'Approve Report'
+                                    : 'Analyze'}
+                            </BaseText>
+                        )}
+                    </TouchableOpacity>
+                </View>
+            )}
+
         </KeyboardAvoidingView>
     );
 };

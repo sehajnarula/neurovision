@@ -11,6 +11,8 @@ import { ms, vs } from 'utilities/scale_utils';
 // import useReportsApi from 'api/report_api';
 import ReportList from 'components/list_items/report_list';
 import { useState } from 'react';
+import { getAuth } from '@react-native-firebase/auth';
+import useReports from '../../../hooks/useReports';
 
 type HomeScreenProps = MaterialBottomTabScreenProps<
   DashbordBottomTabBarParamList,
@@ -21,9 +23,14 @@ const HomeScreen: React.FC<HomeScreenProps> = props => {
   const { showDialog, hideDialog } = useDialog();
   const dispatch = useDispatch();
   const userData = useSelector((state: RootState) => state.loginData.loginData);
+  const doctorId = getAuth().currentUser?.uid;
   const theme = useTheme();
-  const [reports, setReports] = useState([]);
 
+  const {
+    reports,
+    loading,
+    error,
+  } = useReports(doctorId ?? null, 'doctorId');
   const dummyReports = [
     {
       id: 1,
@@ -51,18 +58,20 @@ const HomeScreen: React.FC<HomeScreenProps> = props => {
         style={[theme.fonts.displayLarge, { color: theme.colors.textColor.primary, alignSelf: 'flex-end', marginRight: ms(15) }]}
         children='+'
         onPress={() => { props.navigation.getParent()?.navigate('CreateReportScreen') }} />
-      {/* <View
-        style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-        <BaseText
-          style={[theme.fonts.displayLarge, { marginHorizontal: ms(20), textAlign: 'center' }]}
-          children={`Welcome ${userData?.userName ?? ''}, There are no reports to check right now`}
+      {reports.length > 0 ? (
+        <ReportList
+          data={reports}
+          navigation={props.navigation.getParent()}
         />
-
-      </View> */}
-
-      <ReportList
-        data={dummyReports}
-      />
+      ) : (
+        <View
+          style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+          <BaseText
+            style={[theme.fonts.displayLarge, { marginHorizontal: ms(20), textAlign: 'center' }]}
+            children={`Welcome ${userData?.userName ?? ''}, There are no reports to check right now`}
+          />
+        </View>
+      )}
 
     </View>
   );

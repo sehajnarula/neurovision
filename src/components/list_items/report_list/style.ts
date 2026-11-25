@@ -23,6 +23,7 @@ export const style = (theme: MD3CustomTheme) =>
             backgroundColor: theme.colors.card.cardBackground,
             borderRadius: ms(12),
             padding: ms(16),
+            marginHorizontal: ms(10),
             elevation: 2,
         },
         sectionTitle: {

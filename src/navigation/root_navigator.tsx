@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useThemeContext } from 'context/theme_provider';
 import AppNavigator from 'navigation/app_navigator';
 import AuthenticationNavigator from 'navigation/auth_navigator';
-import PatientDashboardNavigator from 'navigation/patient_dashboard_navigator';
+import PatientAppNavigator from 'navigation/patient_app_navigator';
 import React from 'react';
 import { useTheme } from 'react-native-paper';
 import { useSelector } from 'react-redux';
@@ -65,8 +65,8 @@ const RootNavigator: React.FC = () => {
         {userLoginStatus.isUserLoggedIn ? (
           isPatient ? (
             <RootStack.Screen
-              name="PatientDashboardNavigator"
-              component={PatientDashboardNavigator}
+              name="PatientAppNavigator"
+              component={PatientAppNavigator}
             />
           ) : (
             <RootStack.Screen
