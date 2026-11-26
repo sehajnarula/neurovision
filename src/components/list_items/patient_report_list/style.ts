@@ -24,6 +24,7 @@ export const style = (theme: MD3CustomTheme) =>
             borderRadius: ms(12),
             padding: ms(16),
             marginHorizontal: ms(10),
+            marginTop: 10,
             elevation: 2,
         },
         sectionTitle: {

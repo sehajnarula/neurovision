@@ -30,27 +30,7 @@ const HomeScreen: React.FC<HomeScreenProps> = props => {
     reports,
     loading,
     error,
-  } = useReports(doctorId ?? null, 'doctorId');
-  const dummyReports = [
-    {
-      id: 1,
-      title: 'Report 1',
-      description: 'Description 1',
-      date: '2022-01-01',
-    },
-    {
-      id: 2,
-      title: 'Report 2',
-      description: 'Description 2',
-      date: '2022-01-01',
-    },
-    {
-      id: 3,
-      title: 'Report 3',
-      description: 'Description 3',
-      date: '2022-01-01',
-    },
-  ]
+  } = useReports(doctorId ?? null);
 
   return (
     <View style={style.mainContainer}>

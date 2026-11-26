@@ -82,6 +82,12 @@ const LoginScreen: React.FC<LoginScreenProps> = props => {
             gap: vs(20),
           }}
         >
+
+          <BaseText
+            style={[theme.fonts.displayLarge, { marginHorizontal: ms(20), textAlign: 'center' }]}
+            children={`Welcome To NeuroVision `}
+          />
+
           <Controller
             control={control}
             name="email"
@@ -148,6 +154,7 @@ const LoginScreen: React.FC<LoginScreenProps> = props => {
             <BaseText
               variant="labelMedium"
               style={{ color: theme.colors.textColor.primary }}
+              onPress={() => props.navigation.navigate('ForgotPasswordScreen')}
             >
               Forgot Password?
             </BaseText>

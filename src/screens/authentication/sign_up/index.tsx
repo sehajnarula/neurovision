@@ -78,6 +78,12 @@ const SignUpScreen: React.FC<SignUpScreenProps> = props => {
             gap: vs(20),
           }}
         >
+
+          <BaseText
+            style={[theme.fonts.displayLarge, { marginHorizontal: ms(20), textAlign: 'center' }]}
+            children={`Sign Up Now!`}
+          />
+
           <Controller
             control={control}
             name="name"

@@ -17,6 +17,7 @@ export type AuthenticationStackParamList = {
   LoginScreen: undefined;
   SignUpScreen: undefined;
   SplashScreen: undefined;
+  ForgotPasswordScreen: undefined;
 };
 
 export type DashbordBottomTabBarParamList = {

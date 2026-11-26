@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import LoginScreen from 'screens/authentication/login';
 import SignUpScreen from 'screens/authentication/sign_up';
 import SplashScreen from 'screens/splash_screen';
+import ForgotPasswordScreen from 'screens/authentication/forgot_password';
 import { RootState } from 'store';
 import { AuthenticationStackParamList } from 'types/navigation_types';
 
@@ -31,6 +32,7 @@ const AuthenticationNavigator: React.FC = () => {
       <Stack.Screen component={SplashScreen} name={'SplashScreen'} />
       <Stack.Screen component={LoginScreen} name={'LoginScreen'} />
       <Stack.Screen component={SignUpScreen} name={'SignUpScreen'} />
+      <Stack.Screen component={ForgotPasswordScreen} name={'ForgotPasswordScreen'} />
     </Stack.Navigator>
   );
 };
